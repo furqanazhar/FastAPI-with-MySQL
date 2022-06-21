@@ -1,4 +1,4 @@
-# ToDoNotes
+# FastAPI Python Service
 Python FastAPI framework to populate and list customers data from MIFO portal
 http://dev.mifos.io
 
