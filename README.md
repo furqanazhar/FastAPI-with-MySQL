@@ -5,6 +5,9 @@ http://dev.mifos.io
 # Tested Environment
 Windows 11 Home
 
+# MySql Download Link
+https://dev.mysql.com/downloads/installer/
+
 # Start Web Server
 ``http://localhost:8000/docs``
 
