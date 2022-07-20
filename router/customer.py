@@ -1,7 +1,9 @@
+import json
 from fastapi import APIRouter, status, Request
 from fastapi.responses import JSONResponse
 from common.utils import convert_response_to_json
 from database.db_helper import Database
+import requests
 
 router = APIRouter()
 db = Database()
@@ -9,10 +11,18 @@ customer_table = 'Customers'
 
 
 @router.post('/customers', response_description='Create database and populate customer data')
-async def populate_customer_data(request: Request):
+async def populate_customer_data(limit: int):
     try:
-        customer = dict(request)
-        data = await db.insert_row(customer_table, customer)
+        session = requests.Session()
+        session.auth = ("mifos", "password")
+        data = {}
+        url = f"https://demo.mifos.io/fineract-provider/api/v1/clients?limit={limit}&offset=0"
+        response = session.get(url)
+        response_code = int(response.status_code)
+        response = response.json()
+        print('response_code', response_code)
+        print('response', response)
+        #data = await db.insert_row(customer_table, response)
         payload = {
             'message': 'Successfully created resource',
             'data': convert_response_to_json(data)
