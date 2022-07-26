@@ -4,6 +4,7 @@ from fastapi.responses import JSONResponse
 from common.utils import convert_response_to_json
 from database.db_helper import Database
 import requests
+import traceback
 
 router = APIRouter()
 db = Database()
@@ -20,18 +21,40 @@ async def populate_customer_data(limit: int):
         response = session.get(url)
         response_code = int(response.status_code)
         response = response.json()
-        print('response_code', response_code)
-        print('response', response)
-        #data = await db.insert_row(customer_table, response)
-        payload = {
-            'message': 'Successfully created resource',
-            'data': convert_response_to_json(data)
-        }
-        return JSONResponse(status_code=status.HTTP_201_CREATED, content=payload)
+
+        if response_code != 200:
+            payload = {
+                'message': 'Failed to invoke API',
+                'error': convert_response_to_json(response)
+            }
+            return JSONResponse(status_code=status.HTTP_400_BAD_REQUEST, content=payload)
+        else:
+            totalRecords = response["totalFilteredRecords"]
+            recordsList = response["pageItems"]
+
+            print('Total Customers : ', totalRecords)
+
+            for i in range(len(recordsList)):
+                try:
+                    print('.......')
+                    print(recordsList[i]['id'])
+                    print(recordsList[i]['fullname'])
+                    print(recordsList[i]['mobileNo'])
+                    print(recordsList[i]['officeName'])
+                    print(recordsList[i]['status']['value'])
+                    print('.......')
+                except Exception as ex:
+                    error = traceback.print_tb(ex.__traceback__)
+                    print(error)
+            payload = {
+                'message': 'Successfully created resource',
+                'data': convert_response_to_json(data)
+            }
+            return JSONResponse(status_code=status.HTTP_201_CREATED, content=payload)
     except Exception as ex:
         payload = {
             'message': 'Failed to create resource',
-            'error': convert_response_to_json(ex)
+            'error': traceback.print_tb(ex.__traceback__)
         }
         return JSONResponse(status_code=status.HTTP_400_BAD_REQUEST, content=payload)
 
@@ -48,7 +71,7 @@ async def get_all_customers():
     except Exception as ex:
         payload = {
             'message': 'Failed to retrieve resource',
-            'error': convert_response_to_json(ex)
+            'error': traceback.print_tb(ex.__traceback__)
         }
         return JSONResponse(status_code=status.HTTP_400_BAD_REQUEST, content=payload)
 
@@ -65,6 +88,6 @@ async def get_customer_by_id(customer_id: str):
     except Exception as ex:
         payload = {
             'message': 'Failed to retrieve resource',
-            'error': convert_response_to_json(ex)
+            'error': traceback.print_tb(ex.__traceback__)
         }
         return JSONResponse(status_code=status.HTTP_400_BAD_REQUEST, content=payload)
