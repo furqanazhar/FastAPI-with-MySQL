@@ -1,10 +1,11 @@
+import traceback
 import mysql.connector
 
 
 class Database:
 
     def __init__(self):
-        
+
         self.connection = mysql.connector.connect(
             host="localhost",
             user="root",
@@ -22,11 +23,17 @@ class Database:
         else:
             print("Connection to MySQL Server failed")
 
-    async def insert_row(self, collection, data):
+    async def insert_row(self, data):
+        try:
+            with open('database\insert_row.sql', 'r') as f:
+                with self.connection.cursor() as cursor:
+                    cursor.executemany(f.read(), data)
+            self.connection.commit()
+        except Exception as ex:
+            print('error', ex)
+
+    async def get_row_by_id(self, _id):
         pass
 
-    async def get_row_by_id(self, collection, _id):
-        pass
-
-    async def get_all_rows(self, collection):
+    async def get_all_rows(self):
         pass
