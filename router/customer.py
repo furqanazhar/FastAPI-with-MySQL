@@ -68,7 +68,7 @@ async def populate_customer_data(limit: int):
 @router.get('/customers', response_description='Get all customers')
 async def get_all_customers():
     try:
-        data = await db.get_all_rows(customer_table)
+        data = await db.get_all_rows()
         payload = {
             'message': 'Successfully retrieved resource',
             'data': convert_response_to_json(data)
@@ -85,7 +85,7 @@ async def get_all_customers():
 @router.get('/customers/{customerId}', response_description='Get specific customer by id')
 async def get_customer_by_id(customer_id: str):
     try:
-        data = await db.get_row_by_id(customer_table, customer_id)
+        data = await db.get_row_by_id(customer_id)
         payload = {
             'message': 'Successfully retrieved resource',
             'data': convert_response_to_json(data)
