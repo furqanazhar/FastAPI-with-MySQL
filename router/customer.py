@@ -82,8 +82,8 @@ async def get_all_customers():
         return JSONResponse(status_code=status.HTTP_400_BAD_REQUEST, content=payload)
 
 
-@router.get('/customers/{customerId}', response_description='Get specific customer by id')
-async def get_customer_by_id(customer_id: str):
+@router.get('/customer', response_description='Get specific customer by id')
+async def get_customer_by_id(customer_id: int):
     try:
         data = await db.get_row_by_id(customer_id)
         payload = {
