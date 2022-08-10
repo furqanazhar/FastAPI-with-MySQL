@@ -16,7 +16,7 @@ class Database:
         if self.connection.is_connected():
             dbInfo = self.connection.get_server_info()
             print("Connected to MySQL Server version ", dbInfo)
-            with open('database\create_table.sql', 'r') as file:
+            with open('database\scripts\create_table.sql', 'r') as file:
                 with self.connection.cursor() as cursor:
                     cursor.execute(file.read(), multi=True)
                 self.connection.commit()
@@ -25,7 +25,7 @@ class Database:
 
     async def insert_row(self, data):
         try:
-            with open('database\insert_row.sql', 'r') as file:
+            with open('database\scripts\insert_row.sql', 'r') as file:
                 with self.connection.cursor() as cursor:
                     cursor.execute(file.read(), data)
                     self.connection.commit()
@@ -34,7 +34,7 @@ class Database:
 
     async def get_row_by_id(self, _id):
         try:
-            with open('database\get_by_id.sql', 'r') as file:
+            with open('database\scripts\get_by_id.sql', 'r') as file:
                 with self.connection.cursor() as cursor:
                     cursor.execute(file.read(), (_id,))
                     customers = cursor.fetchone()
@@ -44,7 +44,7 @@ class Database:
 
     async def get_all_rows(self):
         try:
-            with open('database\get_all.sql', 'r') as file:
+            with open('database\scripts\get_all.sql', 'r') as file:
                 with self.connection.cursor() as cursor:
                     cursor.execute(file.read())
                     customers = cursor.fetchall()
