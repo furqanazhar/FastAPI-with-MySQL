@@ -30,10 +30,17 @@ class Database:
                     cursor.execute(file.read(), data)
                     self.connection.commit()
         except Exception as ex:
-            print('error', ex)
+            print('Database error', ex)
 
     async def get_row_by_id(self, _id):
-        pass
+        try:
+            with open('database\get_by_id.sql', 'r') as file:
+                with self.connection.cursor() as cursor:
+                    cursor.execute(file.read(), (_id,))
+                    customers = cursor.fetchone()
+                    return customers
+        except Exception as ex:
+            print('Database error', ex)
 
     async def get_all_rows(self):
         try:
@@ -43,4 +50,4 @@ class Database:
                     customers = cursor.fetchall()
                     return customers
         except Exception as ex:
-            print('error', ex)
+            print('Database error', ex)
