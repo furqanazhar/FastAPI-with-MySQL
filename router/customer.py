@@ -34,7 +34,6 @@ async def populate_customer_data(limit: int):
             recordsList = response["pageItems"]
 
             print('Total Customers : ', totalRecords)
-            customerList:Customer = []
             clientID = fullName = mobileNo = officeName = statusValue = None
 
             for i in range(len(recordsList)):
@@ -48,11 +47,10 @@ async def populate_customer_data(limit: int):
                     print('error', traceback.format_exc())
                 finally:
                     if clientID != 'N/A' and mobileNo != 'N/A':
-                        customerList.append([clientID, fullName, mobileNo, officeName, statusValue])
+                        await db.insert_row([clientID, fullName, mobileNo, officeName, statusValue])
                         print('Record added')
                     else:
                         print('Record not inserted because mobileNo/clientID is not available')
-            await db.insert_row(customerList)
 
             payload = {
                 'message': 'Successfully created resource',
