@@ -27,8 +27,8 @@ class Database:
         try:
             with open('database\insert_row.sql', 'r') as f:
                 with self.connection.cursor() as cursor:
-                    cursor.executemany(f.read(), data)
-            self.connection.commit()
+                    cursor.execute(f.read(), data)
+                    self.connection.commit()
         except Exception as ex:
             print('error', ex)
 
